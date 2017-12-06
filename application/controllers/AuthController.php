@@ -40,6 +40,9 @@ class AuthController extends Controller
         if($id > 0){
             $user = ['id'=>$id, 'role_id'=>3, 'login'=>$register['login'] ];
             $_SESSION['user'] = $user;
+            echo json_encode(['saved' => true]);
+        }else{
+            echo json_encode(['saved' => false]);
         }
         return;
     }
@@ -55,6 +58,9 @@ class AuthController extends Controller
         if($result){
             $user = ['id'=>$result['id'], 'role_id'=>$result['role_id'], 'login'=>$result['login'] ];
             $_SESSION['user'] = $user;
+            echo json_encode(['saved' => true]);
+        }else{
+            echo json_encode(['saved' => false]);
         }
         return;
     }

@@ -20,6 +20,7 @@ class Controller
         session_start();
         $this->auth();
         $this->view = new View($this->layout);
+        set_exception_handler([$this,'exception_handler']);
     }
 
     protected function auth(){
@@ -43,5 +44,9 @@ class Controller
         $_SESSION['user'] = $user;
         $this->auth_user = $user;
         $this->redirect('auth');
+    }
+
+    public function exception_handler(\Exception $exception){
+        echo "Exception: {$exception->getMessage()}";
     }
 }

@@ -16,7 +16,6 @@ require_once(ROOT.'/autoload.php');
 // подключаем конфигурацию URL
 $routes= include (ROOT.'/config/config_router.php');
 
-
 // запускаем роутер
 $router = new Router($routes);
 $router->run();

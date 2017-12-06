@@ -51,14 +51,22 @@
                 $.ajax({
                     type: 'post',
                     url: '/auth/come_in',
-                    async: false,
                     data: {
                         'come_in': data
                     },
-                    dataType: 'json'
+                    dataType: 'json',
+                    success: function (resp) {
+                        if(resp.saved === true){
+                            window.location = '/home/start';
+                        }else{
+                            alert('login failed')
+                        }
+                    },
+                    error: function (error) {
+                        alert(error.responseText);
+                    }
                 });
             }
-            window.location = '/home/start';
         },
 
         register: function () {
@@ -69,14 +77,23 @@
                 $.ajax({
                     type: 'post',
                     url: '/auth/register',
-                    async: false,
                     data: {
                         'register': data
                     },
-                    dataType: 'json'
+                    dataType: 'json',
+                    success: function (resp) {
+                        if(resp.saved === true){
+                            window.location = '/home/start';
+                        }else{
+                            alert('register failed')
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error.responseText);
+                        alert(error.responseText);
+                    }
                 });
             }
-            window.location = '/home/start';
         },
         
         form_data: function () {

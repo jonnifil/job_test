@@ -8,6 +8,6 @@
 return [
     'db_name' => 'job_test',
     'host' => 'localhost',
-    'db_user' => '',
-    'db_pass' => '',
+    'db_user' => 'root',
+    'db_pass' => '13021962',
 ];

@@ -49,9 +49,12 @@ class User extends Model
      */
     protected function check_login($login){
         $db = $this->db;
-        $query = $db->prepare('SELECT COUNT(id) FROM user WHERE login = ?');
-        $query->execute([$login]);
-        return $query->fetch(\PDO::FETCH_NUM);
+        $query = $db->prepare('SELECT COUNT(id) FROM user WHERE login = :login');
+        $query->execute([
+            ':login' => $login
+        ]);
+        $result = $query->fetch(\PDO::FETCH_NUM);
+        return $result;
     }
 
     /**

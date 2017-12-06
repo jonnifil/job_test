@@ -55,7 +55,6 @@
                 alert('Заполните все поля!');
                 return false;
             }
-            console.log(data)
             return data;
         },
 
@@ -67,13 +66,18 @@
                 $.ajax({
                     type: 'post',
                     url: '/news/save',
-                    async: false,
                     data: {
                         'news_data': data
                     },
-                    dataType: 'json'
+                    dataType: 'json',
+                    success: function (resp) {
+                        window.location = '/home/start';
+
+                    },
+                    error: function (error) {
+                        alert(error.responseText);
+                    }
                 });
-                window.location = '/home';
             }
         }
     };
