@@ -13,19 +13,7 @@ use core\Model;
 
 class News extends Model
 {
-    // TODO: Преобразовать в метод базового класса
-    /**
-     * @param $id
-     * @return mixed
-     */
-    public function get_by_id($id){
-        $db = $this->db;
-        $query = $db->prepare('SELECT * FROM news WHERE id = :id');
-        $query->execute([
-            ':id' => $id
-        ]);
-        return $query->fetch(\PDO::FETCH_ASSOC);
-    }
+    public $table_name = 'news';
 
     /**
      * @param $user_id
@@ -40,15 +28,6 @@ class News extends Model
         return $query->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    /**
-     * @return mixed
-     */
-    public function get_all(){
-        $db = $this->db;
-        $query = $db->prepare('SELECT * FROM news');
-        $query->execute();
-        return $query->fetchAll(\PDO::FETCH_ASSOC);
-    }
 
     /**
      * @param $args

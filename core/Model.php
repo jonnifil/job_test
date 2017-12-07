@@ -13,25 +13,35 @@ class Model
 {
     private $config;
     protected $db;
+    public $table_name;
 
     public function __construct()
     {
         $this->config = include (ROOT.'/config/config_db.php');
-        $this->connect();
+        $this->db = DB::connect();
     }
 
-    protected final function connect(){
-        $config = $this->config;
-        $dsn = "mysql:dbname={$config['db_name']};host={$config['host']}";
-        $user = $config['db_user'];
-        $password = $config['db_pass'];
-
-        try {
-            $dbh = new \PDO($dsn, $user, $password);
-        } catch (\PDOException $e) {
-            throw new \Exception('Подключение не удалось: ' . $e->getMessage());
-        }
-        $this->db = $dbh;
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function get_by_id($id){
+        $db = $this->db;
+        $query = $db->prepare('SELECT * FROM ' . $this->table_name . ' WHERE id = :id');
+        $query->execute([
+            ':id' => $id
+        ]);
+        return $query->fetch(\PDO::FETCH_ASSOC);
     }
+    /**
+     * @return mixed
+     */
+    public function get_all(){
+        $db = $this->db;
+        $query = $db->prepare('SELECT * FROM ' . $this->table_name);
+        $query->execute();
+        return $query->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
 
 }

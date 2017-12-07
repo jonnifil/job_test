@@ -78,7 +78,7 @@ class NewsController extends Controller
         }else{
             $id = $model->update($news_data);
         }
-        return $id;
+        echo json_encode(['id'=>$id]);
     }
 
     /**

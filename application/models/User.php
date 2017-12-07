@@ -13,6 +13,7 @@ use core\Model;
 
 class User extends Model
 {
+    public $table_name = 'user';
 
     const ROLE_ADMIN = 1;
     const ROLE_GUEST = 2;
