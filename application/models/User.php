@@ -14,7 +14,6 @@ use core\Model;
 class User extends Model
 {
     public $table_name = 'user';
-    public $class_name = 'User';
     protected $id;
     protected $role_id;
     protected $login;
@@ -82,12 +81,7 @@ class User extends Model
         return $query->fetch(\PDO::FETCH_ASSOC);
     }
 
-    public function get($id){
-        $values = parent::get_by_id($id);
-        $this->id = $values['id'];
-        $this->role_id = $values['role_id'];
-        $this->login = $values['login'];
-        $this->password = $values['password'];
-        return $this;
+    public function get_login(){
+        return $this->login;
     }
 }

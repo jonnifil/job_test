@@ -34,15 +34,6 @@ class Model
         ]);
         return $query->fetch(\PDO::FETCH_ASSOC);
     }
-
-    public function get($id){
-        $db = $this->db;
-        $query = $db->prepare('SELECT * FROM ' . $this->table_name . ' WHERE id = :id');
-        $query->execute([
-            ':id' => $id
-        ]);
-        return $query->fetch(\PDO::FETCH_CLASS, $this->class_name);
-    }
     /**
      * @return mixed
      */
@@ -51,6 +42,20 @@ class Model
         $query = $db->prepare('SELECT * FROM ' . $this->table_name);
         $query->execute();
         return $query->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @param $id
+     * @return $this|null
+     */
+    public function get($id){
+        $values = $this->get_by_id($id);
+        if(!$values)
+            return null;
+        foreach ($values as $key=>$val){
+            $this->$key = $val;
+        }
+        return $this;
     }
 
 

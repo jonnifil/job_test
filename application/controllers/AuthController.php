@@ -27,10 +27,6 @@ class AuthController extends Controller
         if($user['role_id'] == User::ROLE_ADMIN || $user['role_id'] == User::ROLE_USER){
             $this->redirect('home');
         }
-        $model = new User();
-        $arr = $model->get_by_id(1);
-        $obj = $model->get(1);
-
         $this->view->render('auth', []);
     }
 
