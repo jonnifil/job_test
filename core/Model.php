@@ -25,6 +25,7 @@ class Model
     /**
      * @param $id
      * @return mixed
+     * Возвращает строку таблицы в виде ассоциативного массива
      */
     public function get_by_id($id){
         $db = $this->db;
@@ -36,6 +37,7 @@ class Model
     }
     /**
      * @return mixed
+     * Возвращает данные таблицы в виде ассоциативного массива
      */
     public function get_all(){
         $db = $this->db;
@@ -47,6 +49,7 @@ class Model
     /**
      * @param $id
      * @return $this|null
+     * Возвращает экземпляр объекта модели
      */
     public function get($id){
         $values = $this->get_by_id($id);

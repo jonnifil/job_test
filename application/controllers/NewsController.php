@@ -17,12 +17,10 @@ class NewsController extends Controller
 {
     /**
      * @param $id
+     * Страница отображения выбранной новости
      */
     public function start($id){
-        $user = $this->auth_user;
-        if($user['role_id'] == User::ROLE_GUEST){
-            $this->redirect('auth');
-        }
+        $user = $this->check_auth();
         $model = new News();
         $news = $model->get_by_id($id);
         //Если новость не нашли, даём заставку
@@ -41,12 +39,10 @@ class NewsController extends Controller
 
     /**
      * @param $id
+     * Страница создания или редактирования новости
      */
     public function edit($id){
-        $user = $this->auth_user;
-        if($user['role_id'] == User::ROLE_GUEST){
-            $this->redirect('auth');
-        }
+        $user = $this->check_auth();
         $news = [
                  'id' => 0,
                  'user_id' => $user['id'],
@@ -66,7 +62,7 @@ class NewsController extends Controller
     }
 
     /**
-     *Всавка и редактирование новостей
+     * Вставка и редактирование новостей
      */
     public function save(){
         if(!isset($_POST['news_data']))
@@ -82,13 +78,24 @@ class NewsController extends Controller
     }
 
     /**
-     * @param $id
+     * @return mixed
+     * Проверка прав пользователя
      */
-    public function delete_news($id){
+    protected function check_auth(){
         $user = $this->auth_user;
         if($user['role_id'] == User::ROLE_GUEST){
             $this->redirect('auth');
+        }else{
+            return $user;
         }
+    }
+
+    /**
+     * @param $id
+     * Безвозвратное удаление новости
+     */
+    public function delete_news($id){
+        $user = $this->check_auth();
         $model = new News();
         $news = $model->get_by_id($id);
         //Даём удалять существующие новости только админу и владельцу

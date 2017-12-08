@@ -22,13 +22,23 @@ class HomeController extends Controller
     }
 
     public function start(){
-        $user = $this->auth_user;
-        if($user['role_id'] == User::ROLE_GUEST){
-            $this->redirect('auth');
-        }
+        $this->check_auth();
         $model = new News();
         $news_list = $model->get_all();
         $this->view->render('home', ['news_list' => $news_list]);
+    }
+
+    /**
+     * @return mixed
+     * Проверка прав пользователя
+     */
+    protected function check_auth(){
+        $user = $this->auth_user;
+        if($user['role_id'] == User::ROLE_GUEST){
+            $this->redirect('auth');
+        }else{
+            return $user;
+        }
     }
 
     public function logout()

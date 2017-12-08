@@ -22,6 +22,9 @@ class AuthController extends Controller
         parent::__construct();
     }
 
+    /**
+     * Стартовая страница
+     */
     public function start(){
         $user = $this->auth_user;
         if($user['role_id'] == User::ROLE_ADMIN || $user['role_id'] == User::ROLE_USER){
@@ -30,6 +33,10 @@ class AuthController extends Controller
         $this->view->render('auth', []);
     }
 
+    /**
+     * @throws \Exception
+     * Обработка попытки регистрации нового пользователя
+     */
     public function register(){
         if(!isset($_POST['register']))
             return;
@@ -41,6 +48,7 @@ class AuthController extends Controller
         if($id > 0){
             $user = ['id'=>$id, 'role_id'=>3, 'login'=>$register['login'] ];
             $_SESSION['user'] = $user;
+            $_SESSION['user'] = $user;
             echo json_encode(['saved' => true]);
         }else{
             echo json_encode(['saved' => false]);
@@ -48,6 +56,10 @@ class AuthController extends Controller
         return;
     }
 
+    /**
+     * @throws \Exception
+     * Обработка попытки входа
+     */
     public function come_in(){
         if(!isset($_POST['come_in']))
             return;

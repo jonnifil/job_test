@@ -12,6 +12,11 @@ namespace core;
 class DB
 {
 
+    /**
+     * @return \PDO
+     * @throws \Exception
+     * Подключение к базе данных через PDO
+     */
     public final static function connect(){
         $config = include (ROOT.'/config/config_db.php');
         $dsn = "mysql:dbname={$config['db_name']};host={$config['host']}";

@@ -23,6 +23,9 @@ class Controller
         set_exception_handler([$this,'exception_handler']);
     }
 
+    /**
+     * Проверка авторизации. Если отсутствует, то авторизуем как Гостя
+     */
     protected function auth(){
         if(!isset($_SESSION['user'])){
             $user = ['id'=>2, 'role_id'=>2, 'login'=>'guest'];
@@ -33,12 +36,19 @@ class Controller
         }
     }
 
+    /**
+     * @param $controller_name
+     * Редирект на переданный контроллер (строка без префикса, в нижнем регистре)
+     */
     protected function redirect($controller_name){
         header('HTTP/1.1 200 OK');
         header('Location: http://'.$_SERVER['HTTP_HOST'].'/'.$controller_name);
         exit();
     }
 
+    /**
+     * Выход из аккаунта и редирект на страницу авторизации
+     */
     protected function logout(){
         $user = ['id'=>2, 'role_id'=>2, 'login'=>'guest'];
         $_SESSION['user'] = $user;
@@ -46,6 +56,11 @@ class Controller
         $this->redirect('auth');
     }
 
+    /**
+     * @param \Exception $exception
+     * Глобальный перехват исключений. Возвращает строку в error ajax.
+     * Если ведём лог, то дописать вывод в лог файл.
+     */
     public function exception_handler(\Exception $exception){
         echo "Exception: {$exception->getMessage()}";
     }
