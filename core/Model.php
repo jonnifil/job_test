@@ -14,6 +14,7 @@ class Model
     private $config;
     protected $db;
     public $table_name;
+    public $class_name;
 
     public function __construct()
     {
@@ -32,6 +33,15 @@ class Model
             ':id' => $id
         ]);
         return $query->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    public function get($id){
+        $db = $this->db;
+        $query = $db->prepare('SELECT * FROM ' . $this->table_name . ' WHERE id = :id');
+        $query->execute([
+            ':id' => $id
+        ]);
+        return $query->fetch(\PDO::FETCH_CLASS, $this->class_name);
     }
     /**
      * @return mixed

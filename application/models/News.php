@@ -14,6 +14,7 @@ use core\Model;
 class News extends Model
 {
     public $table_name = 'news';
+    public $class_name = 'News';
 
     /**
      * @param $user_id
@@ -26,6 +27,10 @@ class News extends Model
             ':user_id' => $user_id
         ]);
         return $query->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function get_title(){
+        return $this->title;
     }
 
 
