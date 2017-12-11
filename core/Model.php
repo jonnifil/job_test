@@ -11,16 +11,14 @@ namespace core;
 
 class Model
 {
-    private $config;
     protected $db;
     protected $query_string;
+    protected $row_data = array();
     public $table_name;
     public $alias;
-    public $class_name;
 
     public function __construct()
     {
-        $this->config = include (ROOT.'/config/config_db.php');
         $this->db = DB::connect();
     }
 
@@ -45,7 +43,8 @@ class Model
         $db = $this->db;
         $query = $db->prepare('SELECT * FROM ' . $this->table_name);
         $query->execute();
-        return $query->fetchAll(\PDO::FETCH_ASSOC);
+        $this->row_data = $query->fetchAll(\PDO::FETCH_ASSOC);
+        return $this;
     }
 
     /**
@@ -66,54 +65,74 @@ class Model
     /**
      * @param string $field_list
      * @param string $alias
+     * @return $this
      */
     public function select($field_list='*', $alias=''){
         $this->query_string = 'SELECT ' . $field_list . ' FROM ' . $this->table_name . ' ' . $alias;
+        return $this;
     }
 
     /**
      * @param array $where
+     * @return $this
      */
     public function set_where(array $where){
         $this->query_string .= " WHERE {$where['field']} {$where['compare']} {$where['value']}";
+        return $this;
     }
 
     /**
      * @param array $where
+     * @return $this
      */
     public function set_and_where(array $where){
         $this->query_string .= " AND {$where['field']} {$where['compare']} {$where['value']}";
+        return $this;
     }
 
     /**
      * @param array $where
+     * @return $this
      */
     public function set_or_where(array $where){
         $this->query_string .= " OR {$where['field']} {$where['compare']} {$where['value']}";
+        return $this;
     }
 
     /**
      * @param array $join
+     * @return $this
      */
     public function set_join(array $join){
         $this->query_string .= " JOIN {$join['table_name']} {$join['table_alias']} ON {$join['field']} {$join['compare']} {$join['value']}";
+        return $this;
     }
 
     /**
      * @param array $join
+     * @return $this
      */
     public function set_left_join(array $join){
         $this->query_string .= " LEFT JOIN " .$join['table_name']." ".$join['table_alias']." ON ".$join['field']." ".$join['compare']." ".$join['value'];
+        return $this;
     }
 
     /**
-     * @return array
+     * @return $this
      */
     public function set_get_all(){
         $db = $this->db;
         $query = $db->prepare($this->query_string);
         $query->execute();
-        return $query->fetchAll(\PDO::FETCH_ASSOC);
+        $this->row_data = $query->fetchAll(\PDO::FETCH_ASSOC);
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function as_array(){
+        return $this->row_data;
     }
 
     /**
@@ -121,7 +140,8 @@ class Model
      * @return array
      * Принимает массив строк выборки типа get_all, Возвращает массив экземпляров текущей модели
      */
-    public function as_collection($query_rows=array()){
+    public function as_collection(){
+        $query_rows = $this->row_data;
         if(!$query_rows)
             return array();
         $result = array();
@@ -140,7 +160,8 @@ class Model
      * @return array
      *
      */
-    public function as_ids($query_rows=array(), $field='id'){
+    public function as_ids($field='id'){
+        $query_rows = $this->row_data;
         if(!$query_rows)
             return array();
         $result = array();
@@ -156,7 +177,8 @@ class Model
      * @param string $separator
      * @return string
      */
-    public function as_group_concat($query_rows=array(), $field='id', $separator=','){
+    public function as_group_concat($field='id', $separator=','){
+        $query_rows = $this->row_data;
         if(!$query_rows)
             return '';
         $result = array_shift($query_rows)[$field];

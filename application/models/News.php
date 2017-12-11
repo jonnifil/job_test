@@ -95,4 +95,11 @@ class News extends Model
             ':id' => $id
         ]);
     }
+
+    public function get_annotate_list(){
+        $this
+            ->select('n.id,n.title,n.annotate,u.login','n')
+            ->set_join(['table_name'=>'user','table_alias'=>'u','field'=>'n.user_id','compare'=>'=','value'=>'u.id']);
+        return $this->set_get_all();
+    }
 }

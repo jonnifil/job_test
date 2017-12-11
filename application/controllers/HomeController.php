@@ -24,7 +24,7 @@ class HomeController extends Controller
     public function start(){
         $this->check_auth();
         $model = new News();
-        $news_list = $model->get_all();
+        $news_list = $model->get_annotate_list();
         $this->view->render('home', ['news_list' => $news_list]);
     }
 

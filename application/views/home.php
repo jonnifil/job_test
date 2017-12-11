@@ -5,6 +5,7 @@
             <div class="col-xs-11 news_block pointer" style="padding-top: 10px; cursor: pointer" data-id="<?=$news['id'] ?>">
                 <h4 class="text-center"><?=$news['title'] ?></h4>
                 <p><?=$news['annotate'] ?></p>
+                <p>Автор: <?=$news['login'] ?></p>
             </div>
         <?php endforeach; ?>
     <?php else: ?>
