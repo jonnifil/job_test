@@ -14,11 +14,11 @@ use core\Model;
 class News extends Model
 {
     public $table_name = 'news';
-    protected $id;
-    protected $user_id;
-    protected $title;
-    protected $annotate;
-    protected $body;
+    public $id;
+    public $user_id;
+    public $title;
+    public $annotate;
+    public $body;
 
     /**
      * @param $user_id

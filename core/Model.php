@@ -15,7 +15,6 @@ class Model
     protected $query_string;
     protected $row_data = array();
     public $table_name;
-    public $alias;
 
     public function __construct()
     {
@@ -59,6 +58,100 @@ class Model
         foreach ($values as $key=>$val){
             $this->$key = $val;
         }
+        return $this;
+    }
+
+    /**
+     * @param array $data
+     * @return $this
+     */
+    public function load(array $data){
+        foreach ($data as $key=>$val){
+            if (property_exists($this, $key))
+                $this->$key = $val;
+        }
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    protected function get_column_names(){
+        $db = $this->db;
+        $query = $db->prepare("SELECT COLUMN_NAME FROM information_schema.columns WHERE table_name = :table_name AND table_schema = database()");
+        $query->execute([
+            ':table_name' => $this->table_name
+        ]);
+        $column_names = [];
+        foreach ($query as $row){
+            $column_names[] = $row['COLUMN_NAME'];
+        }
+        return $column_names;
+    }
+
+    /**
+     *
+     */
+    public function save_obj(){
+        if (isset($this->id) && (int)$this->id > 0)
+            $this->update();
+        else $this->insert();
+    }
+
+    /**
+     * @return array
+     */
+    protected function prepare_save(){
+        $column_names = $this->get_column_names();
+        $data = (array)$this;
+        $rows_str = '(';
+        $prepare_str = '(';
+        $update_str = '(';
+        $execute_arr = [];
+        foreach ($column_names as $name){
+            if ($name != 'id'){
+                $_name = ':' . $name;
+                $execute_arr[$_name] = $data[$name];
+                $rows_str .= count($execute_arr) == 1 ? $name : ',' . $name;
+                $prepare_str .= count($execute_arr) == 1 ? $_name : ',' . $_name;
+                $update_str .= count($execute_arr) == 1 ? $name . '=' . $_name : ',' . $name . '=' . $_name;
+            }
+        }
+        return [
+            'execute_arr' => $execute_arr,
+            'rows_str' => $rows_str . ')',
+            'prepare_str' => $prepare_str . ')',
+            'update_str' => $update_str . ')',
+        ];
+    }
+
+    /**
+     * @return $this
+     */
+    protected function insert(){
+        $prepare_data = $this->prepare_save();
+        $rows_str = $prepare_data['rows_str'];
+        $prepare_str = $prepare_data['prepare_str'];
+        $execute_arr = $prepare_data['execute_arr'];
+        $db = $this->db;
+        $query = $db->prepare("INSERT INTO {$this->table_name} {$rows_str} VALUES {$prepare_str}");
+        $query->execute($execute_arr);
+        $id = $db->lastInsertId();
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function update(){
+        $prepare_data = $this->prepare_save();
+        $update_str = $prepare_data['update_str'];
+        $execute_arr = $prepare_data['execute_arr'];
+        $execute_arr['id'] = $this->id;
+        $db = $this->db;
+        $query = $db->prepare("UPDATE {$this->table_name} SET {$update_str} WHERE id = :id");
+        $query->execute($execute_arr);
         return $this;
     }
 

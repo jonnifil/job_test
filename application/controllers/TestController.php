@@ -26,7 +26,8 @@ class TestController extends Controller
         $news_list = $news->as_array();
         $list = $model->get_all()->as_collection();
         $news_1 = $model->get(1);
-        $title = $news_1->get_title();
+        if (is_object($news_1))
+            $title = $news_1->get_title();
         $this->view->render('home', ['news_list' => $news_list]);
     }
 }

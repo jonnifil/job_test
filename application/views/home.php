@@ -1,6 +1,6 @@
 <h2 class="text-center">Выбери свою новость</h2>
 <div class="col-xs-12">
-    <?php if(is_array($news_list)): ?>
+    <?php if($news_list): ?>
         <?php foreach ($news_list as $news): ?>
             <div class="col-xs-11 news_block pointer" style="padding-top: 10px; cursor: pointer" data-id="<?=$news['id'] ?>">
                 <h4 class="text-center"><?=$news['title'] ?></h4>
