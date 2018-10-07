@@ -37,13 +37,14 @@ class Router
     public function run(){
         $uri = $this->getURI();
         //по умолчанию путь controller/action
+        $uri = $uri == '' ? '/' : $uri;
         $internalRoute = $uri;
         // Пытаемся применить к нему правила из конфигуации для кастомной обработки.
         foreach($this->routes as $pattern => $route){
             // Если правило совпало.
             if(preg_match("~$pattern~", $uri)){
                 // Получаем внутренний путь из внешнего согласно правилу.
-                $internalRoute = preg_replace("~$pattern~", $route, $uri);
+                $internalRoute = $route;//preg_replace($pattern, $route, $uri);
 
             }
         } // Разбиваем внутренний путь на сегменты.
